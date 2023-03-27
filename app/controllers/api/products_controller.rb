@@ -10,7 +10,8 @@ module Api
 
         def show
             @product = Product.find(params[:id])
-            render json: @product
+            image = rails_blob_url(@product.product_image)
+            render json: { "image":image, "data": @product }
         end
 
         def create
@@ -32,7 +33,7 @@ module Api
         end
 
         def product_params
-            params.permit(:name, :description, :quantity, :price)
+            params.permit(:name, :description, :quantity, :price, :product_image)
         end
         
         
