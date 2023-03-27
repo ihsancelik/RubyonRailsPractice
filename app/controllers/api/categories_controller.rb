@@ -3,6 +3,8 @@ module Api
 
         protect_from_forgery with: :null_session
 
+        before_action :get_category, only: %i[show update destroy]
+
         def index
             @categories = Category.order(created_at: :desc)
             if !@categories.blank?
@@ -14,11 +16,10 @@ module Api
 
 
         def show
-            category = get_category
-            if !category.blank?
-                render json: category, status: :ok
+            if !@category.blank?
+                render json: @category, status: :ok
             else
-                render json: category, status: :bad_request
+                render json: @category, status: :bad_request
             end
         end
 
@@ -32,17 +33,15 @@ module Api
         end
 
         def update
-            category = get_category
-            if category.update(category_params)
-                render json: category, status: :ok
+            if @category.update(category_params)
+                render json: @category, status: :ok
             else
                 render json: "Category cannot update!", status: :bad_request
             end
         end
 
         def destroy
-            category = get_category
-            if category.destroy()
+            if @category.destroy()
                 render json: "Category removed", status: :ok
             else
                 render json: "Category cannot removed", status: :bad_request
