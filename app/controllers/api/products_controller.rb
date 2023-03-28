@@ -18,13 +18,20 @@ module Api
 
         def create
             @product = Product.create(product_params)
-            @product.save()
-            render json: @product
+            if @product.valid?
+                @product.save()
+                render json: @product
+            else
+                render json: @product.errors.full_messages, status: :bad_request
+            end
         end
 
         def update
-            @product.update(product_params)
-            render json: @product
+            if @product.update(product_params)
+                render json: @product, status: :ok
+            else
+                render json: @product.errors.full_messages, status: :bad_request
+            end
         end
 
         def destroy

@@ -25,10 +25,14 @@ module Api
 
         def create
             @category = Category.create(category_params)
-            if @category.save()
-                render json: @category, status: :ok
+            if @category.valid?
+                if @category.save()
+                    render json: @category, status: :ok
+                else
+                    render json: "Category cannot create", status: :bad_request
+                end
             else
-                render json: "Category cannot create", status: :bad_request
+                render json: @category.errors.full_messages, status: :bad_request
             end
         end
 
@@ -36,7 +40,7 @@ module Api
             if @category.update(category_params)
                 render json: @category, status: :ok
             else
-                render json: "Category cannot update!", status: :bad_request
+                render json: @category.errors.full_messages, status: :bad_request
             end
         end
 
@@ -55,7 +59,7 @@ module Api
         end
 
         def category_params
-            params.permit(:name)
+            params.permit(:name, :description)
         end
 
 
