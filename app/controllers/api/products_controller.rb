@@ -2,6 +2,7 @@ module Api
   class ProductsController < ApplicationController
     protect_from_forgery with: :null_session
 
+    before_action :authenticate_user!
     before_action :get_product, only: %i[update show destroy]
     after_action :after_action_test, only: %i[index]
 

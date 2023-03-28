@@ -2,6 +2,7 @@ module Api
   class CategoriesController < ApplicationController
     protect_from_forgery with: :null_session
 
+    before_action :authenticate_user!
     before_action :get_category, only: %i[show update destroy]
 
     def index
