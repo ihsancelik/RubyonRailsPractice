@@ -8,7 +8,11 @@ Rails.application.routes.draw do
 # end
 
 namespace "api" do
-    resources :products
+    resources :products do
+      collection do
+        get 'get_by_name'
+      end
+    end
     resources :categories
 end
 

@@ -13,13 +13,26 @@ module Api
                 render :index, status: :ok
             else
                 @message = "Products count is 0"
-                render :error, status: :bad_request
+                handle_error
             end
         end
 
         def show
-            # image = rails_blob_url(@product.product_image)
-            render json: { "data": { product: @product, category: @product.category } }
+            if !@product.blank?
+                render :show, status: :ok
+            else
+                handle_error
+            end
+        end
+
+        def get_by_name
+            @products = Product.where(name: params[:name]).order(created_at: :desc)
+            if !@products.blank?
+                render 'index.json.jbuilder', status: :ok
+            else
+                @message = "Could not find product with by name"
+                handle_error
+            end
         end
 
         def create
@@ -30,21 +43,30 @@ module Api
                 render :create, status: :ok
             else
                 @message = @product.errors.full_messages
-                render :create, status: :bad_request
+                handle_error
             end
         end
 
         def update
             if @product.update(product_params)
-                render json: @product, status: :ok
+                render :update, status: :ok
             else
-                render json: @product.errors.full_messages, status: :bad_request
+                @message = "Could not be updated"
+                handle_error
             end
         end
 
         def destroy
-            @product.destroy()
-            render json: "The product removed!"
+            if @product.destroy()
+                render :destroy, status: :ok
+            else
+                @message = "Could not be deleted"
+                handle_error
+            end
+        end
+
+        def handle_error
+            render :error, status: :bad_request
         end
 
         def product_params
