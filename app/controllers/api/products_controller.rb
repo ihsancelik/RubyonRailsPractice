@@ -37,6 +37,7 @@ module Api
 
     def create
       @product = Product.create(product_params)
+      authorize(@product)
       if @product.valid?
         @product.save()
         @message = "Product created"
@@ -48,6 +49,7 @@ module Api
     end
 
     def update
+      authorize(@product)
       if @product.update(product_params)
         render :update, status: :ok
       else
@@ -57,6 +59,7 @@ module Api
     end
 
     def destroy
+      authorize(@product)
       if @product.destroy()
         render :destroy, status: :ok
       else

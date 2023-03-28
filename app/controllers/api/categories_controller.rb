@@ -24,6 +24,7 @@ module Api
 
     def create
       @category = Category.create(category_params)
+      authorize(@category)
       if @category.valid?
         if @category.save
           render json: @category, status: :ok
@@ -36,6 +37,7 @@ module Api
     end
 
     def update
+      authorize(@category)
       if @category.update(category_params)
         render json: @category, status: :ok
       else
@@ -44,6 +46,7 @@ module Api
     end
 
     def destroy
+      authorize(@category)
       if @category.destroy
         render json: "Category removed", status: :ok
       else
