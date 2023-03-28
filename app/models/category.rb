@@ -6,7 +6,8 @@ class Category < ApplicationRecord
     before_update :before_updated
     after_create :send_notification
 
-
+    has_many :products
+ 
     private
 
     validates :name, presence: true, length: {minimum:1, maximum:10}

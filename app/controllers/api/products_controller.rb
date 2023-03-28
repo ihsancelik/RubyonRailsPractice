@@ -12,8 +12,8 @@ module Api
         end
 
         def show
-            image = rails_blob_url(@product.product_image)
-            render json: { "image":image, "data": @product }
+            # image = rails_blob_url(@product.product_image)
+            render json: { "data": { product: @product, category: @product.category } }
         end
 
         def create
