@@ -7,8 +7,14 @@ module Api
         after_action :after_action_test, only: %i[index]
 
         def index
-            @products = Product.order(created_at: :desc)
-            render json: @products
+            @products = Product.all
+            if !@products.blank?
+                @message = "Listed the products"
+                render :index, status: :ok
+            else
+                @message = "Products count is 0"
+                render :error, status: :bad_request
+            end
         end
 
         def show
@@ -20,9 +26,11 @@ module Api
             @product = Product.create(product_params)
             if @product.valid?
                 @product.save()
-                render json: @product
+                @message = "Product created"
+                render :create, status: :ok
             else
-                render json: @product.errors.full_messages, status: :bad_request
+                @message = @product.errors.full_messages
+                render :create, status: :bad_request
             end
         end
 
